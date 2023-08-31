@@ -13,7 +13,7 @@
 > **注意**
 >
 > - 只有拥有 `user_admin` 角色的用户才可以将任意权限授予给任意用户和角色。
-> - 在角色被赋予给用户之后，用户需要通过[SET ROLE](SET%20ROLE.md)手动激活角色，方可利用角色的权限。如果希望用户登陆时就默认激活角色，则可以通过[ALTER USER](ALTER%20USER.md)或者[SET DEFAULT ROLE](SET_DEFAULT_ROLE.md)为用户设置默认角色。如果希望系统内所有用户都能够在登陆时默认激活所有权限，则可以设置全局变量`SET GLOBAL activate_all_roles_on_login = TRUE;`。
+> - 角色被赋予给用户之后，用户需要通过 [SET ROLE](SET%20ROLE.md) 手动激活角色，方可利用角色的权限。如果希望用户登录时默认激活角色，则可以通过 [ALTER USER](ALTER%20USER.md) 或 [SET DEFAULT ROLE](SET_DEFAULT_ROLE.md) 为用户设置默认角色。如果希望系统内所有用户都能够在登录时默认激活所有权限，则可以设置全局变量 `SET GLOBAL activate_all_roles_on_login = TRUE;`。
 > - 普通用户可以将自身拥有的授权中带有 WITH GRANT OPTION 关键字的权限赋予给其他用户和角色，参见示例七。
 
 ## 语法
@@ -36,7 +36,6 @@ GRANT
     { ALTER | DROP | ALL [PRIVILEGES] } 
     ON { RESOURCE GROUP <resource_group_name> [, <resource_group_name >,...] ｜ ALL RESOURCE GROUPS} 
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
-
 ```
 
 #### Resource 相关
@@ -84,9 +83,8 @@ GRANT
     ON { DATABASE <db_name> [, <db_name>,...] | ALL DATABASES }
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
-  
-*注意：需要执行 SET CATALOG 之后才能使用。
 
+*注意：需要执行 SET CATALOG 之后才能使用。
 
 ##### Table 相关
 
@@ -100,8 +98,10 @@ GRANT
 ```
 
 *注意：需要执行 SET CATALOG 之后才能使用。table 还可以用 <db_name>.<table_name> 的方式来进行表示。
-GRANT <priv> ON TABLE <db_name>.<table_name> TO {ROLE <role_name> | USER <user_name>}
 
+```SQL
+GRANT <priv> ON TABLE <db_name>.<table_name> TO {ROLE <role_name> | USER <user_name>}
+```
 
 #### View 相关
 
@@ -115,8 +115,10 @@ GRANT
 ```
     
 *注意：需要执行 SET CATALOG 之后才能使用。view 还可以用 <db_name>.<view_name> 的方式来进行表示。
-GRANT <priv> ON VIEW <db_name>.<view_name> TO {ROLE <role_name> | USER <user_name>}
 
+```SQL
+GRANT <priv> ON VIEW <db_name>.<view_name> TO {ROLE <role_name> | USER <user_name>}
+```
 
 #### Materialized view 相关
 
@@ -130,7 +132,10 @@ GRANT
 ```
     
 * 注意：需要执行 SET CATALOG 之后才能使用。物化视图还可以用 `<db_name>.<mv_name>` 的方式来进行表示。
-`GRANT <priv> ON MATERIALIZED_VIEW <db_name>.<mv_name> TO {ROLE <role_name> | USER <user_name>};`
+
+```SQL
+GRANT <priv> ON MATERIALIZED_VIEW <db_name>.<mv_name> TO {ROLE <role_name> | USER <user_name>};
+```
 
 #### Function 相关
 
@@ -144,7 +149,10 @@ GRANT
 ```
     
 *注意：需要执行 SET CATALOG 之后才能使用。function 还可以用 `<db_name>.<function_name>` 的方式来进行表示。
-`GRANT <priv> ON FUNCTION <db_name>.<function_name> TO {ROLE <role_name> | USER <user_name>};`
+
+```SQL
+GRANT <priv> ON FUNCTION <db_name>.<function_name> TO {ROLE <role_name> | USER <user_name>};
+```
 
 #### User 相关
 
@@ -173,11 +181,10 @@ GRANT <role_name> [,<role_name>, ...] TO ROLE <role_name>
 GRANT <role_name> [,<role_name>, ...] TO USER <user_identity>
 ```
 
-*注意：
-- 在角色被赋予给用户之后，用户需要通过[SET ROLE](SET%20ROLE.md)手动激活角色，方可利用角色的权限。
-- 如果希望用户登陆时就默认激活角色，则可以通过[ALTER USER](ALTER%20USER.md)或者[SET DEFAULT ROLE](SET_DEFAULT_ROLE.md)为用户设置默认角色。
-- 如果希望系统内所有用户都能够在登陆时默认激活所有权限，则可以设置全局变量`SET GLOBAL activate_all_roles_on_login = TRUE;`。
-
+**注意：**
+- 在角色被赋予给用户之后，用户需要通过 [SET ROLE](SET%20ROLE.md) 手动激活角色，方可利用角色的权限。
+- 如果希望用户登录时就默认激活角色，则可以通过 [ALTER USER](ALTER%20USER.md) 或者 [SET DEFAULT ROLE](SET_DEFAULT_ROLE.md) 为用户设置默认角色。
+- 如果希望系统内所有用户都能够在登录时默认激活所有权限，则可以设置全局变量 `SET GLOBAL activate_all_roles_on_login = TRUE;`。
 
 ## 示例
 
