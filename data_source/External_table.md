@@ -121,11 +121,13 @@ properties (
 
     > **说明**
     >
-    > 不同目标数据库使用的 JDBC 驱动程序不同，使用其他数据库的 JDBC 驱动程序会有不兼容的问题，建议访问目标数据库官网，查询并使用其支持的 JDBC 驱动程序。常见的目标数据库的  JDBC 驱动程序下载地址，请参见 [MySQL](https://dev.mysql.com/downloads/connector/j/)、[Oracle](https://www.oracle.com/database/technologies/maven-central-guide.html)、[PostgreSQL](https://jdbc.postgresql.org/download/)、[SQL Server](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) 。
+    > 不同目标数据库使用的 JDBC 驱动程序不同，使用其他数据库的 JDBC 驱动程序会有不兼容的问题，建议访问目标数据库官网，查询并使用其支持的 JDBC 驱动程序。常见的目标数据库的 JDBC 驱动程序下载地址，请参见 [MySQL](https://dev.mysql.com/downloads/connector/j/)、[Oracle](https://www.oracle.com/database/technologies/maven-central-guide.html)、[PostgreSQL](https://jdbc.postgresql.org/download/)、[SQL Server](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) 。
 
-* `driver_class`：JDBC 驱动程序的类名称。以下列举常见 JDBC 驱动程序的类名称：
+* `driver_class`：JDBC 驱动程序的类名称。
 
-  * MySQL: com.mysql.jdbc.Driver（MySQL 5.x 及以下版本）、com.mysql.cj.jdbc.Driver （MySQL 8.x 及以上版本）
+  以下列举常见 JDBC 驱动程序的类名称：
+
+  * MySQL: com.mysql.jdbc.Driver（MySQL 5.x 及以下版本）、com.mysql.cj.jdbc.Driver（MySQL 8.x 及以上版本）
   * SQL Server：com.microsoft.sqlserver.jdbc.SQLServerDriver
   * Oracle: oracle.jdbc.driver.OracleDriver
   * PostgreSQL：org.postgresql.Driver
