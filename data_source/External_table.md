@@ -83,7 +83,7 @@ insert into external_t select * from other_table;
 
 在您使用 JDBC 外表时， FE、BE 节点会下载 JDBC 驱动程序，因此 FE、BE 节点所在机器必须能够访问用于下载 JDBC 驱动程序 JAR 包的 URL，该 URL 由创建 JDBC 资源中的配置项 `driver_url` 指定。
 
-### **创建和**管理**JDBC 资源**
+### 创建和管理 JDBC 资源
 
 #### 创建 JDBC 资源
 
@@ -162,7 +162,7 @@ DROP RESOURCE "jdbc0";
 >
 > 删除 JDBC 资源会导致使用该 JDBC 资源创建的 JDBC 外部表不可用，但目标数据库的数据并不会丢失。如果您仍需要通过 StarRocks 查询目标数据库的数据，可以重新创建 JDBC 资源和 JDBC 外部表。
 
-### **创建数据库**
+### 创建数据库
 
 执行如下语句，在 StarRocks 中创建并进入名为 `jdbc_test` 的数据库：
 
@@ -175,7 +175,7 @@ USE jdbc_test;
 >
 > 库名无需与目标数据库的名称保持一致。
 
-### **创建 JDBC 外部表**
+### 创建 JDBC 外部表
 
 执行如下语句，在数据库 `jdbc_test` 中，创建一张名为 `jdbc_tbl` 的 JDBC 外部表：
 
@@ -203,7 +203,7 @@ properties (
 > * 不支持索引。
 > * 不支持通过 PARTITION BY、DISTRIBUTED BY 来指定数据分布规则。
 
-### **查询 JDBC 外部表**
+### 查询 JDBC 外部表
 
 查询 JDBC 外部表前，必须启用 Pipeline 引擎。
 
@@ -229,7 +229,7 @@ StarRocks 支持对目标表进行谓词下推，把过滤条件推给目标表�
 
 如下以目标数据库 MySQL、Oracle、PostgreSQL、SQL Server 为例，说明支持查询的数据类型，以及与 StarRocks 数据类型的映射关系。
 
-#### **目标数据库为 MySQL**
+#### 目标数据库为 MySQL
 
 | MySQL        | StarRocks |
 | ------------ | --------- |
@@ -246,7 +246,7 @@ StarRocks 支持对目标表进行谓词下推，把过滤条件推给目标表�
 | DATE         | DATE      |
 | DATETIME     | DATETIME  |
 
-#### **目标数据库为 Oracle**
+#### 目标数据库为 Oracle
 
 | Oracle          | StarRocks |
 | --------------- | --------- |
@@ -258,7 +258,7 @@ StarRocks 支持对目标表进行谓词下推，把过滤条件推给目标表�
 | DATE            | DATETIME      |
 | NUMBER          | DECIMAL   |
 
-#### **目标数据库为 PostgreSQL**
+#### 目标数据库为 PostgreSQL
 
 | PostgreSQL          | StarRocks |
 | ------------------- | --------- |
@@ -275,7 +275,7 @@ StarRocks 支持对目标表进行谓词下推，把过滤条件推给目标表�
 | VARCHAR             | VARCHAR   |
 | TEXT                | VARCHAR   |
 
-#### **目标数据库为 SQL Server**
+#### 目标数据库为 SQL Server
 
 | SQL Server        | StarRocks |
 | ----------------- | --------- |
