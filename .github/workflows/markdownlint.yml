@@ -25,4 +25,4 @@ jobs:
       if: always()
       uses: lycheeverse/lychee-action@v1.8.0
       with:
-        args: --offline --no-progress '**/*\.md*'
+        args: --offline --no-progress '**/*.md*'
