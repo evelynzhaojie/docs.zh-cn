@@ -14,19 +14,21 @@ progress = true
 
 # Enable link caching. This can be helpful to avoid checking the same links on
 # multiple runs.
-cache = true
+# If we start checking external links we should enable this, but at the
+# moment we are checking links to Markdown files only with arg --offline
+cache = false
 
 # Discard all cached requests older than this duration.
-max_cache_age = "2d"
+# max_cache_age = "2d"
 
 #############################  Runtime  #############################
 
 # Number of threads to utilize.
 # Defaults to number of cores available to the system if omitted.
-threads = 6
+# threads = 6
 
 # Maximum number of allowed redirects [default: 10]
-max_redirects = 10
+# max_redirects = 10
 
 # Maximum number of concurrent network requests [default: 128]
 max_concurrency = 30
@@ -78,6 +80,10 @@ headers = []
 #   ]
 
 # Exclude these filesystem paths from getting checked.
+# We exclude StarRocks_intro as it generates the URLs
+# via a component that takes the path without the `.md`
+# extension, and lychee is looking for a valid path
+# including extension.
 exclude_path = ["./README.md", "./introduction/StarRocks_intro.md", "./assets/"]
 
 include = []
