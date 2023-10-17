@@ -25,4 +25,6 @@ jobs:
       if: always()
       uses: lycheeverse/lychee-action@v1.8.0
       with:
-        args: exclude_path = ["./introduction/StarRocks_intro.md", "./assets"] --offline --no-progress '**/*.md*'
+        args: >
+            --config ./lychee.toml
+            --offline "./**/*.md"
