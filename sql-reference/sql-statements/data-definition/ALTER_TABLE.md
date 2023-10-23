@@ -13,11 +13,11 @@
 ALTER TABLE 语法格式如下：
 
 ```SQL
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 alter_clause1[, alter_clause2, ...]
 ```
 
-其中 **alter_clause** 分为 partition、rollup、schema change、rename、index、swap、comment 操作，不同操作的应用场景为：
+其中 **alter_clause** 分为 partition、rollup、schema change、rename、index、swap、comment、compact (手动 compaction) 操作，不同操作的应用场景为：
 
 * partition: 修改分区属性，删除分区，增加分区。
 * rollup: 创建或删除 rollup index。
@@ -26,6 +26,7 @@ alter_clause1[, alter_clause2, ...]
 * index: 修改索引(目前支持 bitmap 索引)。
 * swap: 原子替换两张表。
 * comment: 修改已有表的注释。**从 3.1 版本开始支持。**
+* compact: 根据表或者指定分区手动进行数据版本合并（Compaction）。
 
 > **说明**
 >
@@ -414,6 +415,36 @@ SWAP WITH table_name;
 ALTER TABLE [database.]table COMMENT = "<new table comment>";
 ```
 
+### 手动 Compaction
+
+StarRocks 通过 Compaction 机制将导入的不同数据版本进行合并，将小文件合并成大文件，有效提升了查询性能。
+
+xxx 版本之前，支持通过两种方式来做 Compaction：
+
+* 系统自动在后台执行 Compaction。Compaction 的粒度是 BE 级，由后台自动执行，用户无法控制具体的数据库或者表。
+* 用户通过 HTTP 接口指定 Tablet 来执行 Compaction。
+
+xxx 版本之后，增加了一个 SQL 接口，用户可以通过执行 SQL 命令来手动进行 Compaction，可以指定表、单个或多个分区进行 Compaction。
+
+语法：
+
+```sql
+-- 对整表做 compaction。
+ALTER TABLE <tbl_name> COMPACT
+
+-- 指定一个分区进行 compaction。
+ALTER TABLE <tbl_name> COMPACT <partition_name>
+
+-- 指定多个分区进行 compaction。
+ALTER TABLE <tbl_name> COMPACT (<partition1_name>[,<partition2_name>,...])
+
+-- 对多个分区进行 cumulative compaction。
+ALTER TABLE <tbl_name> CUMULATIVE COMPACT (<partition1_name>[,<partition2_name>,...])
+
+-- 对多个分区进行 base compaction。
+ALTER TABLE <tbl_name> BASE COMPACT (<partition1_name>[,<partition2_name>,...])
+```
+
 ## 示例
 
 ### table
@@ -706,10 +737,44 @@ ALTER TABLE [database.]table COMMENT = "<new table comment>";
 ALTER TABLE table1 SWAP WITH table2;
 ```
 
+### 手动 Compaction 示例
+
+```sql
+CREATE TABLE compaction_test( 
+    event_day DATE,
+    pv BIGINT)
+DUPLICATE KEY(event_day)
+PARTITION BY date_trunc('month', event_day)
+DISTRIBUTED BY HASH(event_day) BUCKETS 8
+PROPERTIES("replication_num" = "3");
+
+INSERT INTO compaction_test VALUES
+('2023-02-14', 2),
+('2033-03-01',2);
+{'label':'insert_734648fa-c878-11ed-90d6-00163e0dcbfc', 'status':'VISIBLE', 'txnId':'5008'}
+
+INSERT INTO compaction_test VALUES
+('2023-02-14', 2),('2033-03-01',2);
+{'label':'insert_85c95c1b-c878-11ed-90d6-00163e0dcbfc', 'status':'VISIBLE', 'txnId':'5009'}
+
+ALTER TABLE compaction_test COMPACT;
+
+ALTER TABLE compaction_test COMPACT p203303;
+
+ALTER TABLE compaction_test COMPACT (p202302,p203303);
+
+ALTER TABLE compaction_test CUMULATIVE COMPACT (p202302,p203303);
+
+ALTER TABLE compaction_test BASE COMPACT (p202302,p203303);
+```
+
+您可以使用 SHOW TABLET 来查看 Compaction 后的数据版本变化。
+
 ## 相关参考
 
 * [CREATE TABLE](CREATE_TABLE.md)
 * [SHOW CREATE TABLE](../data-manipulation/SHOW_CREATE_TABLE.md)
 * [SHOW TABLES](../data-manipulation/SHOW_TABLES.md)
 * [SHOW ALTER TABLE](../data-manipulation/SHOW_ALTER.md)
-* [DROP TABLE](DROP_TABLE.md)
+* [DROP TABLE](./DROP_TABLE.md)
+* [SHOW TABLET](../data-manipulation/SHOW_TABLET.md)
