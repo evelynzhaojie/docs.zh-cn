@@ -809,4 +809,3 @@ ALTER TABLE compaction_test BASE COMPACT (p202302,p203303);
 - [SHOW TABLES](../data-manipulation/SHOW_TABLES.md)
 - [SHOW ALTER TABLE](../data-manipulation/SHOW_ALTER.md)
 - [DROP TABLE](./DROP_TABLE.md)
-- [SHOW TABLET](../data-manipulation/SHOW_TABLET.md)
