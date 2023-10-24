@@ -50,8 +50,8 @@ alter_clause1[, alter_clause2, ...]
 语法：
 
 ```SQL
-ALTER TABLE [database.]table 
-ADD PARTITION [IF NOT EXISTS] partition_name
+ALTER TABLE [<db_name>.]<tbl_name> 
+ADD PARTITION [IF NOT EXISTS] <partition_name>
 partition_desc ["key"="value"]
 [DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]];
 ```
@@ -59,12 +59,14 @@ partition_desc ["key"="value"]
 注意：
 
 1. partition_desc 支持以下两种写法：
-    * VALUES LESS THAN [MAXVALUE|("value1", ...)]
-    * VALUES [("value1", ...), ("value1", ...))
+
+   - `VALUES LESS THAN [MAXVALUE|("value1", ...)]`
+   - `VALUES [("value1", ...), ("value1", ...)]`
+
 2. 分区为左闭右开区间，如果用户仅指定右边界，系统会自动确定左边界。
 3. 如果没有指定分桶方式，则自动使用建表使用的分桶方式。
 4. 如指定分桶方式，只能修改分桶数，不可修改分桶方式或分桶列。
-5. `["key" = "value"]` 部分可以设置分区的一些属性，具体说明见 [CREATE TABLE](../data-definition/CREATE_TABLE.md)。
+5. `["key" = "value"]` 部分可以设置分区的一些属性，具体说明见 [CREATE TABLE](./CREATE_TABLE.md)。
 
 #### 删除分区 (DROP PARTITION)
 
@@ -72,11 +74,11 @@ partition_desc ["key"="value"]
 
 ```sql
 -- 2.0之前版本
-ALTER TABLE [database.]table
-DROP PARTITION [IF EXISTS | FORCE] partition_name;
+ALTER TABLE [<db_name>.]<tbl_name>
+DROP PARTITION [IF EXISTS | FORCE] <partition_name>;
 -- 2.0及之后版本
-ALTER TABLE [database.]table
-DROP PARTITION [IF EXISTS] partition_name [FORCE];
+ALTER TABLE [<db_name>.]<tbl_name>
+DROP PARTITION [IF EXISTS] <partition_name> [FORCE];
 ```
 
 注意：
@@ -92,8 +94,8 @@ DROP PARTITION [IF EXISTS] partition_name [FORCE];
 语法：
 
 ```SQL
-ALTER TABLE [database.]table 
-ADD TEMPORARY PARTITION [IF NOT EXISTS] partition_name
+ALTER TABLE [<db_name>.]<tbl_name>
+ADD TEMPORARY PARTITION [IF NOT EXISTS] <partition_name>
 partition_desc ["key"="value"]
 [DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]];
 ```
@@ -103,8 +105,8 @@ partition_desc ["key"="value"]
 语法：
 
 ```SQL
-ALTER TABLE [database.]table 
-REPLACE PARTITION partition_name 
+ALTER TABLE [<db_name>.]<tbl_name>
+REPLACE PARTITION <partition_name> 
 partition_desc ["key"="value"]
 WITH TEMPORARY PARTITION
 partition_desc ["key"="value"]
@@ -116,8 +118,8 @@ partition_desc ["key"="value"]
 语法：
 
 ```sql
-ALTER TABLE [database.]table
-DROP TEMPORARY PARTITION partition_name;
+ALTER TABLE [<db_name>.]<tbl_name>
+DROP TEMPORARY PARTITION <partition_name>;
 ```
 
 #### 修改分区属性 (MODIFY PARTITION)
@@ -125,7 +127,7 @@ DROP TEMPORARY PARTITION partition_name;
 **语法：**
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
     MODIFY PARTITION { <partition_name> | partition_name_list | (*) }
         SET ("key" = "value", ...);
 ```
@@ -138,7 +140,7 @@ ALTER TABLE [database.]table
   - replication_num
 
 - 对于单分区表，分区名同表名。对于多分区表，如果需要修改所有分区的属性，则使用 `(*)` 更加方便。
-- 执行 `SHOW PARTITIONS FROM <table_name>` 查看修改后分区属性。
+- 执行 `SHOW PARTITIONS FROM <tbl_name>` 查看修改后分区属性。
 
 ### 操作 rollup 相关语法
 
@@ -149,7 +151,7 @@ ALTER TABLE [database.]table
 语法：
 
 ```SQL
-ALTER TABLE [database.]table 
+ALTER TABLE [<db_name>.]<tbl_name> 
 ADD ROLLUP rollup_name (column_name1, column_name2, ...)
 [FROM from_index_name]
 [PROPERTIES ("key"="value", ...)];
@@ -160,7 +162,7 @@ properties: 支持设置超时时间，默认超时时间为 1 天。
 例子：
 
 ```SQL
-ALTER TABLE [database.]table 
+ALTER TABLE [<db_name>.]<tbl_name> 
 ADD ROLLUP r1(col1,col2) from r0;
 ```
 
@@ -169,7 +171,7 @@ ADD ROLLUP r1(col1,col2) from r0;
 语法：
 
 ```SQL
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 ADD ROLLUP [rollup_name (column_name1, column_name2, ...)
 [FROM from_index_name]
 [PROPERTIES ("key"="value", ...)],...];
@@ -178,7 +180,7 @@ ADD ROLLUP [rollup_name (column_name1, column_name2, ...)
 例子：
 
 ```SQL
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 ADD ROLLUP r1(col1,col2) from r0, r2(col3,col4) from r0;
 ```
 
@@ -193,14 +195,14 @@ ADD ROLLUP r1(col1,col2) from r0, r2(col3,col4) from r0;
 语法：
 
 ```SQL
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 DROP ROLLUP rollup_name [PROPERTIES ("key"="value", ...)];
 ```
 
 例子：
 
 ```sql
-ALTER TABLE [database.]table DROP ROLLUP r1;
+ALTER TABLE [<db_name>.]<tbl_name> DROP ROLLUP r1;
 ```
 
 #### 批量删除 rollup index
@@ -208,14 +210,14 @@ ALTER TABLE [database.]table DROP ROLLUP r1;
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 DROP ROLLUP [rollup_name [PROPERTIES ("key"="value", ...)],...];
 ```
 
 例子：
 
 ```sql
-ALTER TABLE [database.]table DROP ROLLUP r1, r2;
+ALTER TABLE [<db_name>.]<tbl_name> DROP ROLLUP r1, r2;
 ```
 
 注意：
@@ -233,7 +235,7 @@ base index 和 rollup index 都是物化索引。下方语句在编写时如果�
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT "default_value"]
 [AFTER column_name|FIRST]
 [TO rollup_index_name]
@@ -255,7 +257,7 @@ ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT "default_value"]
 - 添加多列:
 
   ```sql
-  ALTER TABLE [database.]table
+  ALTER TABLE [<db_name>.]<tbl_name>
   ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT "default_value", ...)
   [TO rollup_index_name]
   [PROPERTIES ("key"="value", ...)]
@@ -264,7 +266,7 @@ ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT "default_value"]
 - 添加多列的同时通过 `AFTER` 指定列的添加位置：
 
   ```sql
-  ALTER TABLE [database.]table
+  ALTER TABLE [<db_name>.]<tbl_name>
   ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT "default_value" AFTER (column_name))
   ADD COLUMN (column_name2 column_type [KEY | agg_type] DEFAULT "default_value" AFTER (column_name))
   [TO rollup_index_name]
@@ -282,7 +284,7 @@ ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT "default_value"]
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 DROP COLUMN column_name
 [FROM rollup_index_name];
 ```
@@ -297,7 +299,7 @@ DROP COLUMN column_name
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 MODIFY COLUMN column_name column_type [KEY | agg_type] [NULL | NOT NULL] [DEFAULT "default_value"]
 [AFTER column_name|FIRST]
 [FROM rollup_index_name]
@@ -329,7 +331,7 @@ MODIFY COLUMN column_name column_type [KEY | agg_type] [NULL | NOT NULL] [DEFAUL
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 ORDER BY (column_name1, column_name2, ...)
 [FROM rollup_index_name]
 [PROPERTIES ("key"="value", ...)]
@@ -345,7 +347,7 @@ ORDER BY (column_name1, column_name2, ...)
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 ADD col_name data_type [NULL] AS generation_expr [COMMENT 'string']
 ```
 
@@ -371,7 +373,7 @@ PROPERTIES ("key"="value")
 语法：
 
 ```sql
-ALTER TABLE table_name RENAME new_table_name;
+ALTER TABLE <tbl_name> RENAME <new_tbl_name>;
 ```
 
 #### 修改 rollup index 名称 (RENAME ROLLUP)
@@ -379,7 +381,7 @@ ALTER TABLE table_name RENAME new_table_name;
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 RENAME ROLLUP old_rollup_name new_rollup_name;
 ```
 
@@ -388,8 +390,8 @@ RENAME ROLLUP old_rollup_name new_rollup_name;
 语法：
 
 ```sql
-ALTER TABLE [database.]table
-RENAME PARTITION old_partition_name new_partition_name;
+ALTER TABLE [<db_name>.]<tbl_name>
+RENAME PARTITION <old_partition_name> <new_partition_name>;
 ```
 
 ### Bitmap index 修改
@@ -399,7 +401,7 @@ RENAME PARTITION old_partition_name new_partition_name;
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 ADD INDEX index_name (column [, ...],) [USING BITMAP] [COMMENT 'balabala'];
 ```
 
@@ -415,7 +417,7 @@ ADD INDEX index_name (column [, ...],) [USING BITMAP] [COMMENT 'balabala'];
 语法：
 
 ```sql
-ALTER TABLE [database.]table
+ALTER TABLE [<db_name>.]<tbl_name>
 DROP INDEX index_name;
 ```
 
@@ -424,8 +426,8 @@ DROP INDEX index_name;
 语法：
 
 ```sql
-ALTER TABLE [database.]table
-SWAP WITH table_name;
+ALTER TABLE [<db_name>.]<tbl_name>
+SWAP WITH <tbl_name>;
 ```
 
 ### 修改表的注释（3.1 版本起）
@@ -433,7 +435,7 @@ SWAP WITH table_name;
 语法：
 
 ```sql
-ALTER TABLE [database.]table COMMENT = "<new table comment>";
+ALTER TABLE [<db_name>.]<tbl_name> COMMENT = "<new table comment>";
 ```
 
 ### 手动 Compaction（3.1 版本起）
