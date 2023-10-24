@@ -2,7 +2,16 @@
 
 ## 功能
 
-该语句用于修改已有表的结构。
+该语句用于修改已有表的结构，包括：
+
+- [增加或删除分区，修改分区属性](#操作-partition-相关语法)
+- [创建或删除 rollup index](#操作-rollup-相关语法)
+- [执行 schema change](#schema-change)
+- [修改表名、分区名、索引名](#rename-对名称进行修改)
+- [修改 Bitmap 索引](#bitmap-index-修改)
+- [对表进行原子替换](#swap-将两个表原子替换)
+- [修改表注释](#修改表的注释31-版本起)
+- [手动执行 compaction](#手动-compaction31-版本起)
 
 > **注意**
 >
@@ -17,22 +26,22 @@ ALTER TABLE [<db_name>.]<tbl_name>
 alter_clause1[, alter_clause2, ...]
 ```
 
-其中 **alter_clause** 分为 partition、rollup、schema change、rename、index、swap、comment、compact (手动 compaction) 操作，不同操作的应用场景为：
+其中 **alter_clause** 分为 partition、rollup、schema change、rename、index、swap、comment、compact 操作，不同操作的应用场景为：
 
-* partition: 修改分区属性，删除分区，增加分区。
-* rollup: 创建或删除 rollup index。
-* schema change: 增加列，删除列，调整列顺序，修改列类型。
-* rename: 修改表名，rollup index 名称，修改 partition 名称，注意列名不支持修改。
-* index: 修改索引(目前支持 bitmap 索引)。
-* swap: 原子替换两张表。
-* comment: 修改已有表的注释。**从 3.1 版本开始支持。**
-* compact: 根据表或者指定分区手动进行数据版本合并（Compaction）。
+- partition: 修改分区属性，删除分区，增加分区。
+- rollup: 创建或删除 rollup index。
+- schema change: 增加列，删除列，调整列顺序，修改列类型。
+- rename: 修改表名，rollup index 名称，修改 partition 名称，**注意列名不支持修改**。
+- index: 修改索引（目前支持 bitmap 索引）。
+- swap: 原子替换两张表。
+- comment: 修改已有表的注释。**从 3.1 版本开始支持。**
+- compact: 对指定表或分区手动执行 Compaction（数据版本合并）。**从 3.1 版本开始支持。**
 
 > **说明**
 >
-> * partition、rollup 和 schema change 这三种操作不能同时出现在一条 `ALTER TABLE` 语句中。
-> * rollup、schema change 是异步操作，命令提交成功后会立即返回一个成功消息，您可以使用 [SHOW ALTER TABLE](../data-manipulation/SHOW_ALTER.md) 语句查看操作的进度。
-> * partition、rename、swap 和 index 是同步操作，命令返回表示执行完毕。
+> - partition、rollup 和 schema change 这三种操作不能同时出现在一条 `ALTER TABLE` 语句中。
+> - rollup、schema change 是异步操作，命令提交成功后会立即返回一个成功消息，您可以使用 [SHOW ALTER TABLE](../data-manipulation/SHOW_ALTER.md) 语句查看操作的进度。
+> - partition、rename、swap 和 index 是同步操作，命令返回表示执行完毕。
 
 ### 操作 partition 相关语法
 
@@ -123,13 +132,13 @@ ALTER TABLE [database.]table
 
 **使用说明：**
 
-* 当前支持修改分区的下列属性：
-  * storage_medium
-  * storage_cooldown_ttl 或 storage_cooldown_time
-  * replication_num
+- 当前支持修改分区的下列属性：
+  - storage_medium
+  - storage_cooldown_ttl 或 storage_cooldown_time
+  - replication_num
 
-* 对于单分区表，分区名同表名。对于多分区表，如果需要修改所有分区的属性，则使用 `(*)` 更加方便。
-* 执行 `SHOW PARTITIONS FROM <table_name>` 查看修改后分区属性。
+- 对于单分区表，分区名同表名。对于多分区表，如果需要修改所有分区的属性，则使用 `(*)` 更加方便。
+- 执行 `SHOW PARTITIONS FROM <table_name>` 查看修改后分区属性。
 
 ### 操作 rollup 相关语法
 
@@ -243,12 +252,24 @@ ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT "default_value"]
 
 语法：
 
-```sql
-ALTER TABLE [database.]table
-ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT "default_value", ...)
-[TO rollup_index_name]
-[PROPERTIES ("key"="value", ...)]
-```
+- 添加多列:
+
+  ```sql
+  ALTER TABLE [database.]table
+  ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT "default_value", ...)
+  [TO rollup_index_name]
+  [PROPERTIES ("key"="value", ...)]
+  ```
+
+- 添加多列的同时通过 `AFTER` 指定列的添加位置：
+
+  ```sql
+  ALTER TABLE [database.]table
+  ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT "default_value" AFTER (column_name))
+  ADD COLUMN (column_name2 column_type [KEY | agg_type] DEFAULT "default_value" AFTER (column_name))
+  [TO rollup_index_name]
+  [PROPERTIES ("key"="value", ...)]
+  ```
 
 注意：
 
@@ -291,15 +312,15 @@ MODIFY COLUMN column_name column_type [KEY | agg_type] [NULL | NOT NULL] [DEFAUL
 4. 分区列不能做任何修改。
 5. 目前支持以下类型的转换（精度损失由用户保证）：
 
-    * TINYINT/SMALLINT/INT/BIGINT 转换成 TINYINT/SMALLINT/INT/BIGINT/DOUBLE。
-    * TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE/DECIMAL 转换成 VARCHAR。
-    * VARCHAR 支持修改最大长度。
-    * VARCHAR 转换成 TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE。
-    * VARCHAR 转换成 DATE (目前支持 "%Y-%m-%d"，"%y-%m-%d"， "%Y%m%d"，"%y%m%d"，"%Y/%m/%d，"%y/%m/%d " 六种格式化格式)
+    - TINYINT/SMALLINT/INT/BIGINT 转换成 TINYINT/SMALLINT/INT/BIGINT/DOUBLE。
+    - TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE/DECIMAL 转换成 VARCHAR。
+    - VARCHAR 支持修改最大长度。
+    - VARCHAR 转换成 TINTINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE。
+    - VARCHAR 转换成 DATE (目前支持 "%Y-%m-%d"，"%y-%m-%d"， "%Y%m%d"，"%y%m%d"，"%Y/%m/%d，"%y/%m/%d " 六种格式化格式)
     DATETIME 转换成 DATE(仅保留年-月-日信息，例如: `2019-12-09 21:47:05` &lt;--&gt; `2019-12-09`)
     DATE 转换成 DATETIME(时分秒自动补零，例如: `2019-12-09` &lt;--&gt; `2019-12-09 00:00:00`)
-    * FLOAT 转换成 DOUBLE。
-    * INT 转换成 DATE (如果 INT 类型数据不合法则转换失败，原始数据不变。)
+    - FLOAT 转换成 DOUBLE。
+    - INT 转换成 DATE (如果 INT 类型数据不合法则转换失败，原始数据不变。)
 
 6. 不支持从 NULL 转为 NOT NULL。
 
@@ -415,21 +436,21 @@ SWAP WITH table_name;
 ALTER TABLE [database.]table COMMENT = "<new table comment>";
 ```
 
-### 手动 Compaction
+### 手动 Compaction（3.1 版本起）
 
 StarRocks 通过 Compaction 机制将导入的不同数据版本进行合并，将小文件合并成大文件，有效提升了查询性能。
 
-xxx 版本之前，支持通过两种方式来做 Compaction：
+3.1 版本之前，支持通过两种方式来做 Compaction：
 
-* 系统自动在后台执行 Compaction。Compaction 的粒度是 BE 级，由后台自动执行，用户无法控制具体的数据库或者表。
-* 用户通过 HTTP 接口指定 Tablet 来执行 Compaction。
+- 系统自动在后台执行 Compaction。Compaction 的粒度是 BE 级，由后台自动执行，用户无法控制具体的数据库或者表。
+- 用户通过 HTTP 接口指定 Tablet 来执行 Compaction。
 
-xxx 版本之后，增加了一个 SQL 接口，用户可以通过执行 SQL 命令来手动进行 Compaction，可以指定表、单个或多个分区进行 Compaction。
+3.1 版本之后，增加了一个 SQL 接口，用户可以通过执行 SQL 命令来手动进行 Compaction，可以指定表、单个或多个分区进行 Compaction。
 
 语法：
 
 ```sql
--- 对整表做 compaction。
+-- 对整张表做 compaction。
 ALTER TABLE <tbl_name> COMPACT
 
 -- 指定一个分区进行 compaction。
@@ -444,6 +465,8 @@ ALTER TABLE <tbl_name> CUMULATIVE COMPACT (<partition1_name>[,<partition2_name>,
 -- 对多个分区进行 base compaction。
 ALTER TABLE <tbl_name> BASE COMPACT (<partition1_name>[,<partition2_name>,...])
 ```
+
+执行完 Compaction 后，您可以通过查询 `information_schema` 数据库下的 `be_compactions` 表来查看 Compaction 后的数据版本变化 （`SELECT * FROM information_schema.be_compactions;`）。
 
 ## 示例
 
@@ -607,7 +630,16 @@ ALTER TABLE <tbl_name> BASE COMPACT (<partition1_name>[,<partition2_name>,...])
     TO example_rollup_index;
     ```
 
-6. 从 `example_rollup_index` 删除一列。
+6. 向 `example_rollup_index` 添加多列并通过 `AFTER` 指定列的添加位置。
+
+    ```sql
+    ALTER TABLE example_db.my_table
+    ADD COLUMN col1 INT DEFAULT "1" AFTER `k1`,
+    ADD COLUMN col2 FLOAT SUM AFTER `v2`,
+    TO example_rollup_index;
+    ```
+
+7. 从 `example_rollup_index` 删除一列。
 
     ```sql
     ALTER TABLE example_db.my_table
@@ -615,21 +647,21 @@ ALTER TABLE <tbl_name> BASE COMPACT (<partition1_name>[,<partition2_name>,...])
     FROM example_rollup_index;
     ```
 
-7. 修改 base index 的 `col1` 列的类型为 BIGINT，并移动到 `col2` 列后面。
+8. 修改 base index 的 `col1` 列的类型为 BIGINT，并移动到 `col2` 列后面。
 
     ```sql
     ALTER TABLE example_db.my_table
     MODIFY COLUMN col1 BIGINT DEFAULT "1" AFTER col2;
     ```
 
-8. 修改 base index 的 `val1` 列最大长度。原 `val1` 为 (`val1 VARCHAR(32) REPLACE DEFAULT "abc"`)。
+9. 修改 base index 的 `val1` 列最大长度。原 `val1` 为 (`val1 VARCHAR(32) REPLACE DEFAULT "abc"`)。
 
     ```sql
     ALTER TABLE example_db.my_table
     MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT "abc";
     ```
 
-9. 重新排序 `example_rollup_index` 中的列（设原列顺序为：k1, k2, k3, v1, v2）。
+10. 重新排序 `example_rollup_index` 中的列（设原列顺序为：k1, k2, k3, v1, v2）。
 
     ```sql
     ALTER TABLE example_db.my_table
@@ -637,7 +669,7 @@ ALTER TABLE <tbl_name> BASE COMPACT (<partition1_name>[,<partition2_name>,...])
     FROM example_rollup_index;
     ```
 
-10. 同时执行两种操作。
+11. 同时执行两种操作。
 
     ```sql
     ALTER TABLE example_db.my_table
@@ -645,7 +677,7 @@ ALTER TABLE <tbl_name> BASE COMPACT (<partition1_name>[,<partition2_name>,...])
     ORDER BY (k3,k1,k2,v2,v1) FROM example_rollup_index;
     ```
 
-11. 修改表的 bloom filter 列。
+12. 修改表的 bloom filter 列。
 
     ```sql
     ALTER TABLE example_db.my_table
@@ -660,21 +692,21 @@ ALTER TABLE <tbl_name> BASE COMPACT (<partition1_name>[,<partition2_name>,...])
     PROPERTIES ("bloom_filter_columns"="k1,k2,k3");
     ```
 
-12. 修改表的 Colocate 属性。
+13. 修改表的 Colocate 属性。
 
     ```sql
     ALTER TABLE example_db.my_table
     SET ("colocate_with" = "t1");
     ```
 
-13. 将表的分桶方式由 Random Distribution 改为 Hash Distribution。
+14. 将表的分桶方式由 Random Distribution 改为 Hash Distribution。
 
     ```sql
     ALTER TABLE example_db.my_table
     SET ("distribution_type" = "hash");
     ```
 
-14. 修改表的动态分区属性(支持未添加动态分区属性的表添加动态分区属性)。
+15. 修改表的动态分区属性(支持未添加动态分区属性的表添加动态分区属性)。
 
     ```sql
     ALTER TABLE example_db.my_table
@@ -696,7 +728,7 @@ ALTER TABLE <tbl_name> BASE COMPACT (<partition1_name>[,<partition2_name>,...])
 
 ### rename
 
-1. 将名为 `table1` 的表修改为 `table2`。
+1. 将表 `table1` 的名称修改为 `table2`。
 
     ```sql
     ALTER TABLE table1 RENAME table2;
@@ -768,13 +800,11 @@ ALTER TABLE compaction_test CUMULATIVE COMPACT (p202302,p203303);
 ALTER TABLE compaction_test BASE COMPACT (p202302,p203303);
 ```
 
-您可以使用 SHOW TABLET 来查看 Compaction 后的数据版本变化。
-
 ## 相关参考
 
-* [CREATE TABLE](CREATE_TABLE.md)
-* [SHOW CREATE TABLE](../data-manipulation/SHOW_CREATE_TABLE.md)
-* [SHOW TABLES](../data-manipulation/SHOW_TABLES.md)
-* [SHOW ALTER TABLE](../data-manipulation/SHOW_ALTER.md)
-* [DROP TABLE](./DROP_TABLE.md)
-* [SHOW TABLET](../data-manipulation/SHOW_TABLET.md)
+- [CREATE TABLE](./CREATE_TABLE.md)
+- [SHOW CREATE TABLE](../data-manipulation/SHOW_CREATE_TABLE.md)
+- [SHOW TABLES](../data-manipulation/SHOW_TABLES.md)
+- [SHOW ALTER TABLE](../data-manipulation/SHOW_ALTER.md)
+- [DROP TABLE](./DROP_TABLE.md)
+- [SHOW TABLET](../data-manipulation/SHOW_TABLET.md)
