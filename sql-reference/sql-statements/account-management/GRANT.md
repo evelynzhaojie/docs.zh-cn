@@ -80,7 +80,7 @@ GRANT
 ```SQL
 GRANT
     { ALTER | DROP | CREATE TABLE | CREATE VIEW | CREATE FUNCTION | CREATE MATERIALIZED VIEW | ALL [PRIVILEGES] } 
-    ON { DATABASE <database_name> [, <database_name>,...] | ALL DATABASES }
+    ON { {DATABASE <database_name> [, <database_name>,...]} | ALL DATABASES }
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
 
