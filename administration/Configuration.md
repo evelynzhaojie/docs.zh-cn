@@ -1504,6 +1504,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 - 默认值：95
 
 #### storage_flood_stage_left_capacity_bytes 
+#### storage_flood_stage_left_capacity_bytes
 
 - 含义：如果剩余空间小于该值且空间使用率超过 `storage_flood_stage_usage_percent`，会拒绝 Load 和 Restore 作业，默认 100GB。
 - 单位：字节
