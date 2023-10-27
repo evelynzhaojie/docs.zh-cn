@@ -632,7 +632,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 ##### authentication_ldap_simple_server_host
 
 - 含义：LDAP 服务器所在主机的主机名。
-- 默认值：空字符串 
+- 默认值：空字符串
 
 ##### authentication_ldap_simple_server_port
 
@@ -937,7 +937,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 ##### cluster_id
 
-- 含义：FE 所在 StarRocks 集群的 ID。具有相同集群 ID 的 FE 或 BE 属于同一个 StarRocks 集群。取值范围：正整数。- 默认值 `-1` 表示在 Leader FE 首次启动时随机生成一个。 
+- 含义：FE 所在 StarRocks 集群的 ID。具有相同集群 ID 的 FE 或 BE 属于同一个 StarRocks 集群。取值范围：正整数。- 默认值 `-1` 表示在 Leader FE 首次启动时随机生成一个。
 - 默认值：-1
 
 #### Query engine（FE 静态）
@@ -1021,7 +1021,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 - 含义：Tablet 均衡策略。参数别名为 `tablet_balancer_strategy`。取值范围：`disk_and_tablet` 和 `be_load_score`。
 - 默认值：`disk_and_tablet`
 
-##### tablet_sched_storage_cooldown_second 
+##### tablet_sched_storage_cooldown_second
 
 - 含义：从 Table 创建时间点开始计算，自动降冷的时延。降冷是指从 SSD 介质迁移到 HDD 介质。<br />参数别名为 `storage_cooldown_second`。默认值 `-1` 表示不进行自动降冷。如需启用自动降冷功能，请显式设置参数取值大于 0。
 - 单位：秒。
@@ -1086,9 +1086,9 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 
 ##### aws_s3_iam_role_arn
 
-- 含义：有访问 S3 存储空间权限 IAM Role 的 ARN。 
+- 含义：有访问 S3 存储空间权限 IAM Role 的 ARN。
 
-##### aws_s3_external_id 
+##### aws_s3_external_id
 
 - 含义：用于跨 AWS 账户访问 S3 存储空间的外部 ID。
 
@@ -1146,7 +1146,7 @@ ADMIN SET FRONTEND CONFIG ("key" = "value");
 - 含义：Hive 元数据支持的最大并发线程数。
 - 默认值：4
 
-##### hive_meta_cache_refresh_interval_s 
+##### hive_meta_cache_refresh_interval_s
 
 - 含义：刷新 Hive 外表元数据缓存的时间间隔。
 - 单位：秒。
@@ -1232,7 +1232,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 - 单位：KB/s
 - 默认值：50000
 
-#### download_low_speed_limit_kbps 
+#### download_low_speed_limit_kbps
 
 - 含义：单个 HTTP 请求的下载速率下限。如果在 `download_low_speed_time` 秒内下载速度一直低于`download_low_speed_limit_kbps`，那么请求会被终止。
 - 单位：KB/s
@@ -1362,25 +1362,25 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 
 - 含义：回收站清理的间隔，默认 72 个小时。
 - 单位：秒
-- 默认值：259200 
+- 默认值：259200
 
 #### base_compaction_check_interval_seconds
 
-- 含义：Base Compaction 线程轮询的间隔。 
+- 含义：Base Compaction 线程轮询的间隔。
 - 单位：秒
 - 默认值：60
 
 #### min_base_compaction_num_singleton_deltas
 
 - 含义：触发 BaseCompaction 的最小 segment 数。
-- 默认值：5 
+- 默认值：5
 
 #### max_base_compaction_num_singleton_deltas
 
 - 含义：单次 BaseCompaction 合并的最大 segment 数。
 - 默认值：100
 
-#### base_compaction_interval_seconds_since_last_operation 
+#### base_compaction_interval_seconds_since_last_operation
 
 - 含义：上一轮 BaseCompaction 距今的间隔，是触发 BaseCompaction 条件之一。
 - 单位：秒
@@ -1390,7 +1390,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 
 - 含义：CumulativeCompaction 线程轮询的间隔。
 - 单位：秒
-- 默认值：1 
+- 默认值：1
 
 #### update_compaction_check_interval_seconds
 
@@ -1399,12 +1399,12 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 - 默认值：60
 
 #### min_compaction_failure_interval_sec
- 
-- 含义：second 
- Tablet Compaction 失败之后，再次被调度的间隔。
+
+- 含义：Tablet Compaction 失败之后，再次被调度的间隔。
+- 单位：秒
 - 默认值：120
 
-#### periodic_counter_update_period_ms 
+#### periodic_counter_update_period_ms
 
 - 含义：Counter 统计信息的间隔。
 - 单位：毫秒
@@ -1560,7 +1560,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 #### size_tiered_level_num
 
 - 含义：Size-tiered Compaction 策略的 level 数量。每个 level 最多保留一个 rowset，因此稳定状态下最多会有和 level 数相同的 rowset。 |
-- 默认值：7 
+- 默认值：7
 
 #### size_tiered_level_multiple
 
@@ -1573,10 +1573,10 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 - 单位：字节
 - 默认值：131072
 
-#### storage_page_cache_limit 
+#### storage_page_cache_limit
 
 - 含义：PageCache 的容量，STRING，可写为容量大小，例如： `20G`、`20480M`、`20971520K` 或 `21474836480B`。也可以写为 PageCache 占系统内存的比例，例如，`20%`。该参数仅在 `disable_storage_page_cache` 为 `false` 时生效。
-- 默认值：20% 
+- 默认值：20%
 
 #### disable_storage_page_cache
 
@@ -1609,7 +1609,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 
 以下 BE 配置项为静态参数，不支持在线修改，您需要在 **be.conf** 中修改并重启 BE 服务。
 
-#### hdfs_client_enable_hedged_read 
+#### hdfs_client_enable_hedged_read
 
 - 含义：指定是否开启 Hedged Read 功能。
 - 默认值：false
@@ -1650,7 +1650,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 
 #### starlet_port
 
-- 含义：StarRocks 存算分离集群用于 BE 心跳服务的端口。 
+- 含义：StarRocks 存算分离集群用于 BE 心跳服务的端口。
 - 默认值：9070
 
 #### heartbeat_service_port
@@ -1768,11 +1768,6 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 - 含义：BE 之间 RPC 通信是否序列化 RowBatch，用于查询层之间的数据传输。
 - 默认值：FALSE
 
-#### file_descriptor_cache_clean_interval
-
-- 含义：文件句柄缓存清理的间隔，用于清理长期不用的文件句柄
-- 默认值：3600
-
 #### storage_root_path
 
 - 含义：存储数据的目录以及存储介质类型，多块盘配置使用分号 `;` 隔开。<br />如果为 SSD 磁盘，需在路径后添加 `,medium:ssd`，如果为 HDD 磁盘，需在路径后添加 `,medium:hdd`。例如：`/data1,medium:hdd;/data2,medium:ssd`。
@@ -1789,11 +1784,6 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 - 含义：to_base64() 函数输入值的最大长度。
 - 单位：字节
 - 默认值：200000
-
-#### max_percentage_of_error_disk
-
-- 含义：磁盘错误达到一定比例，BE 退出。
-- 默认值：0
 
 #### max_tablet_num_per_shard
 
@@ -1928,22 +1918,22 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 - 含义：每个 Store 用以 Flush MemTable 的线程数。
 - 默认值：2
 
-####  block_cache_enable 
+#### block_cache_enable
 
 - 含义：是否启用 Data Cache。<ul><li>`true`：启用。</li><li>`false`：不启用，为默认值。</li></ul> 如要启用，设置该参数值为 `true`。
-- 默认值：false 
+- 默认值：false
 
 #### block_cache_disk_path  
 
 - 含义：磁盘路径。支持添加多个路径，多个路径之间使用分号(;) 隔开。建议 BE 机器有几个磁盘即添加几个路径。配置路径后，StarRocks 会自动创建名为 **cachelib_data** 的文件用于缓存 block。
-- 默认值：N/A 
+- 默认值：N/A
 
 #### block_cache_meta_path  
 
 - 含义：Block 的元数据存储目录，可自定义。推荐创建在 **`$STARROCKS_HOME`** 路径下。
 - 默认值：N/A
 
-#### block_cache_block_size 
+#### block_cache_block_size
 
 - 含义：单个 block 大小，单位：字节。默认值为 `1048576`，即 1 MB。
 - 默认值：1048576
@@ -1954,16 +1944,16 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 - 单位：字节
 - 默认值：2147483648
 
-#### block_cache_disk_size  
+#### block_cache_disk_size
 
 - 含义：单个磁盘缓存数据量的上限。举例：在 `block_cache_disk_path` 中配置了 2 个磁盘，并设置 `block_cache_disk_size` 参数值为 `21474836480`，即 20 GB，那么最多可缓存 40 GB 的磁盘数据。默认值为 `0`，即仅使用内存作为缓存介质，不使用磁盘。
 - 单位：字节
 - 默认值：0
 
-#### jdbc_connection_pool_size  
+#### jdbc_connection_pool_size
 
 - 含义：JDBC 连接池大小。每个 BE 节点上访问 `jdbc_url` 相同的外表时会共用同一个连接池。
-- 默认值：8 
+- 默认值：8
 
 #### jdbc_minimum_idle_connections  
 
@@ -1974,7 +1964,7 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 
 - 含义：JDBC 空闲连接超时时间。如果 JDBC 连接池内的连接空闲时间超过此值，连接池会关闭超过 `jdbc_minimum_idle_connections` 配置项中指定数量的空闲连接。
 - 单位：毫秒
-- 默认值：600000 
+- 默认值：600000
 
 #### query_cache_capacity  
 
@@ -1985,10 +1975,9 @@ curl -XPOST http://be_host:http_port/api/update_config?configuration_item=value
 #### enable_event_based_compaction_framework  
 
 - 含义：是否开启 Event-based Compaction Framework。`true` 代表开启。`false` 代表关闭。开启则能够在 tablet 数比较多或者单个 tablet 数据量比较大的场景下大幅降低 compaction 的开销。
-- 默认值：TRUE 
+- 默认值：TRUE
 
 #### enable_size_tiered_compaction_strategy  
 
 - 含义：是否开启 Size-tiered Compaction 策略。`true` 代表开启。`false` 代表关闭。
 - 默认值：TRUE
-
