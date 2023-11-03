@@ -648,7 +648,7 @@
     + 模糊/正则匹配函数
       + [like](/sql-reference/sql-functions/like_predicate-functions/like.md)
       + [regexp](/sql-reference/sql-functions/like_predicate-functions/regexp.md)
-      + [regexp_extract](/sql-reference/sql-functions/like_predicate-functions//regexp_extract.md)
+      + [regexp_extract](/sql-reference/sql-functions/like_predicate-functions/regexp_extract.md)
       + [regexp_replace](/sql-reference/sql-functions/like_predicate-functions/regexp_replace.md)
     + 条件函数
       + [case](/sql-reference/sql-functions/condition-functions/case_when.md)
