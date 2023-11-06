@@ -53,14 +53,28 @@ BOOLEAN is_role_in_session(VARCHAR role_name);
    +--------------------------+
    ```
 
-3. 使用 [SET ROLE](../../sql-statements/account-management/SET_ROLE.md) 命令激活当前用户的所有角色，然后再做检查。结果显示角色已经被激活。
+3. 使用 [SET ROLE](../../sql-statements/account-management/SET_ROLE.md) 命令激活角色 `rl`，然后再做检查。结果显示角色 `r1` 已经被激活，`r1` 的两个嵌套角色 `r2` 和 `r3` 也被激活。
 
    ```sql
-   set role all;
+   set role "r1";
 
    select is_role_in_session("r1");
    +--------------------------+
    | is_role_in_session('r1') |
+   +--------------------------+
+   |                        1 |
+   +--------------------------+
+
+   select is_role_in_session("r2");
+   +--------------------------+
+   | is_role_in_session('r2') |
+   +--------------------------+
+   |                        1 |
+   +--------------------------+
+
+   select is_role_in_session("r3");
+   +--------------------------+
+   | is_role_in_session('r3') |
    +--------------------------+
    |                        1 |
    +--------------------------+
