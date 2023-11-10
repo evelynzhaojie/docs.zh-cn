@@ -32,7 +32,7 @@ StarRocks 集成 Apache Ranger 后可以实现以下权限控制方式：
 
 ## 前提条件
 
-- 已经部署安装 Apache Ranger 2.0.0 及以上版本。详细的部署步骤，参见 https://ranger.apache.org/quick_start_guide.html。
+- 已经部署安装 Apache Ranger 2.0.0 及以上版本。详细的部署步骤，参见 [快速开始](https://ranger.apache.org/quick_start_guide.html)。
 - 确保 StarRocks 所有 FE 机器都能够访问 Ranger。您可以在 FE 节点的机器上执行以下语句来判断:
 
   ```SQL
@@ -43,7 +43,7 @@ StarRocks 集成 Apache Ranger 后可以实现以下权限控制方式：
 
 ## 集成过程
 
-### 安装 ranger-starrocks-plugin 
+### 安装 ranger-starrocks-plugin
 
 目前 StarRocks 在能力上支持：
 
@@ -102,7 +102,7 @@ StarRocks 集成 Apache Ranger 后可以实现以下权限控制方式：
 
    ![example](../assets/ranger_show_config.png)
 
-   下图展示了页面上配置好的 service。 
+   下图展示了页面上配置好的 service。
 
    ![service](../assets/ranger_added_service.png)
 
