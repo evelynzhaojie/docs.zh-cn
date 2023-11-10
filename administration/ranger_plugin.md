@@ -8,7 +8,7 @@ Apache Ranger 提供以下核心模块：
 - Agent Plugin：嵌入到 Hadoop 生态圈组件的 Plugin，定期从 Ranger Admin 拉取安全策略，存储在本地文件中。当用户访问组件时，Plugin 会根据安全策略对请求进行安全评估，将结果反馈给相应组件。
 - User Sync：用于拉取用户和用户组的信息，将用户和用户组的权限数据同步到 Ranger 的数据库中。
 
-除了原生的 RBAC 权限系统，StarRocks 还支持通过 Apache Ranger 来进行访问控制，提供更高层次的数据安全保障。
+除了原生的 RBAC 权限系统，StarRocks 3.2 版本还支持通过 Apache Ranger 来进行访问控制，提供更高层次的数据安全保障。
 
 本文介绍 StarRocks 与 Apache Ranger 集成后的权限控制方式以及集成过程。关于如何在 Ranger 上创建权限策略来管理数据安全，参见 [Apache Ranger 官网](https://ranger.apache.org/)。
 
