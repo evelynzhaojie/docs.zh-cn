@@ -180,7 +180,7 @@ StarRocks 集成 Apache Ranger 后可以实现以下权限控制方式：
       SET ("ranger.plugin.hive.service.name" = "hive_catalog_1");
     ```
 
-以上操作将已有的 Catalog 转换为通过 Ranger 鉴权。
+  以上操作将已有的 Catalog 转换为通过 Ranger 鉴权。
 
 ## 后续步骤
 
