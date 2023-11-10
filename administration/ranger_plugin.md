@@ -100,11 +100,11 @@ StarRocks 集成 Apache Ranger 后可以实现以下权限控制方式：
 
    下图展示了一个填写示例。
 
-   [example](../assets/ranger_show_config.png)
+   ![example](../assets/ranger_show_config.png)
 
    下图展示了页面上配置好的 service。 
 
-   [service](../assets/ranger_added_service.png)
+   ![service](../assets/ranger_added_service.png)
 
 5. 点击 **Test connection** 测试连通性，连通成功后保存。
 6. 在 StarRocks 集群的每一台 FE 机器上，在 `fe/conf` 文件夹内创建 `ranger-starrocks-security.xml`，并将内容拷贝，必须修改两处内容并保存：
