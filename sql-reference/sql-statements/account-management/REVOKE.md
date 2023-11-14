@@ -22,6 +22,11 @@ REVOKE
     { CREATE RESOURCE GROUP | CREATE RESOURCE | CREATE EXTERNAL CATALOG | REPOSITORY | BLACKLIST | FILE | OPERATE } 
     ON SYSTEM
     FROM { ROLE | USER} {<role_name>|<user_identity>}
+
+REVOKE
+    CREATE STORAGE VOLUME 
+    ON SYSTEM
+    FROM { ROLE | USER} {<role_name>|<user_identity>}
 ```
 
 #### Resource group 相关
@@ -45,7 +50,7 @@ REVOKE
 #### User 相关
 
 ```SQL
-REVOKE IMPERSONATE ON USER <user_identity> FROM USER <user_identity>
+REVOKE IMPERSONATE ON USER <user_identity> FROM USER <user_identity_1>
 ```
 
 #### 全局 UDF 相关
@@ -53,7 +58,7 @@ REVOKE IMPERSONATE ON USER <user_identity> FROM USER <user_identity>
 ```SQL
 REVOKE
     { USAGE | DROP | ALL [PRIVILEGES]} 
-    ON { GLOBAL FUNCTION <function_name> [, <function_name>,...]    
+    ON { GLOBAL FUNCTION <function_name>(input_data_type) [, <function_name>(input_data_type),...]    
        | ALL GLOBAL FUNCTIONS }
     FROM { ROLE | USER} {<role_name>|<user_identity>}
 ```
@@ -143,7 +148,7 @@ REVOKE <priv> ON MATERIALIZED VIEW db.mv FROM {ROLE <role_name> | USER <user_ide
 ```SQL
 REVOKE
     { USAGE | DROP | ALL [PRIVILEGES]} 
-    ON { FUNCTION <function_name> [, < function_name >,...]
+    ON { FUNCTION <function_name>(input_data_type) [, < function_name >(input_data_type),...]
        ｜ ALL FUNCTIONS } IN 
            { { DATABASE <database_name> [,<database_name>,...] } | ALL DATABASES }
     FROM { ROLE | USER} {<role_name>|<user_identity>}
@@ -158,14 +163,9 @@ REVOKE <priv> ON FUNCTION db.function FROM {ROLE <role_name> | USER <user_identi
 #### Storage volume 相关
 
 ```SQL
-REVOKE  
-    CREATE STORAGE VOLUME 
-    ON SYSTEM
-    FROM { ROLE | USER} {<role_name>|<user_identity>}
-
 REVOKE
     { USAGE | ALTER | DROP | ALL [PRIVILEGES] } 
-    ON { STORAGE VOLUME < name > [, < name >,...] ｜ ALL STORAGE VOLUME} 
+    ON { STORAGE VOLUME < name > [, < name >,...] ｜ ALL STORAGE VOLUMES} 
     FROM { ROLE | USER} {<role_name>|<user_identity>}
 ```
 

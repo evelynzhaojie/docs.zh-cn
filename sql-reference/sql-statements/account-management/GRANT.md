@@ -27,6 +27,11 @@ GRANT
     { CREATE RESOURCE GROUP | CREATE RESOURCE | CREATE EXTERNAL CATALOG | REPOSITORY | BLACKLIST | FILE | OPERATE } 
     ON SYSTEM
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
+
+GRANT
+    CREATE STORAGE VOLUME 
+    ON SYSTEM
+    TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
 
 #### Resource group 相关
@@ -47,15 +52,17 @@ GRANT
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
 
-#### Global UDF 相关
+#### Global Function 相关
 
 ```SQL
 GRANT
     { USAGE | DROP | ALL [PRIVILEGES]} 
-    ON { GLOBAL FUNCTION <function_name> [, < function_name >,...]    
+    ON { GLOBAL FUNCTION <function_name(input_data_type)> [, < function_name(input_data_type) >,...]    
        | ALL GLOBAL FUNCTIONS }
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
+
+示例：`GRANT usage ON GLOBAL FUNCTION a(string) to kevin;`
 
 #### Internal catalog 相关
 
@@ -80,11 +87,14 @@ GRANT
 ```SQL
 GRANT
     { ALTER | DROP | CREATE TABLE | CREATE VIEW | CREATE FUNCTION | CREATE MATERIALIZED VIEW | ALL [PRIVILEGES] } 
-    ON { {DATABASE <database_name> [, <database_name>,...]} | ALL DATABASES }
+    ON { DATABASE <database_name> [, <database_name>,...] | ALL DATABASES }
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
 
-*注意：需要执行 SET CATALOG 之后才能使用。
+**注意**
+>
+> 1. 需要执行 SET CATALOG 之后才能使用。
+> 2. 对于 External Catalog 下的数据库，只有 Hive 和 Iceberg 数据库支持赋予 CREATE TABLE 权限。
 
 #### Table 相关
 
@@ -97,7 +107,10 @@ GRANT
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
 
-*注意：需要执行 SET CATALOG 之后才能使用。table 还可以用 `<db_name>.<table_name>` 的方式来进行表示。
+**注意**
+>
+> 1. 需要执行 SET CATALOG 之后才能使用。table 还可以用 `<db_name>.<table_name>` 的方式来进行表示。
+> 2. 所有 Internal Catalog 和 External Catalog 下的表，都支持赋予 SELECT 权限。Hive 和 Iceberg catalog 下的表，还支持赋予 INSERT 权限 (从 3.1 版本起，支持赋予 Iceberg 表的 INSERT 权限；从 3.2 版本起，支持赋予 Hive 表的 INSERT 权限)。
 
 ```SQL
 GRANT <priv> ON TABLE <db_name>.<table_name> TO {ROLE <role_name> | USER <user_name>}
@@ -114,7 +127,10 @@ GRANT
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
 
-*注意：需要执行 SET CATALOG 之后才能使用。view 还可以用 `<db_name>.<view_name>` 的方式来进行表示。
+**注意**
+>
+> 1. 需要执行 SET CATALOG 之后才能使用。view 还可以用 `<db_name>.<view_name>` 的方式来进行表示。
+> 2. 对于 External Catalog，仅 Hive 表视图支持 SELECT 权限。（3.1 及以后）
 
 ```SQL
 GRANT <priv> ON VIEW <db_name>.<view_name> TO {ROLE <role_name> | USER <user_name>}
@@ -142,7 +158,7 @@ GRANT <priv> ON MATERIALIZED VIEW <db_name>.<mv_name> TO {ROLE <role_name> | USE
 ```SQL
 GRANT
     { USAGE | DROP | ALL [PRIVILEGES]} 
-    ON { FUNCTION <function_name> [, < function_name >,...]
+    ON { FUNCTION <function_name>(input_data_type) [, < function_name(input_data_type) >,...]
        ｜ ALL FUNCTIONS IN 
            { { DATABASE <database_name> [,<database_name>,...] }| ALL DATABASES }}
     TO { ROLE | USER } {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
@@ -157,20 +173,15 @@ GRANT <priv> ON FUNCTION <db_name>.<function_name> TO {ROLE <role_name> | USER <
 #### User 相关
 
 ```SQL
-GRANT IMPERSONATE ON USER <user_identity> TO USER <user_identity> [ WITH GRANT OPTION ]
+GRANT IMPERSONATE ON USER <user_identity> TO USER <user_identity_1> [ WITH GRANT OPTION ]
 ```
 
 #### Storage volume 相关
 
 ```SQL
-GRANT
-    CREATE STORAGE VOLUME 
-    ON SYSTEM
-    TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
-
 GRANT  
     { USAGE | ALTER | DROP | ALL [PRIVILEGES] } 
-    ON { STORAGE VOLUME < name > [, < name >,...] ｜ ALL STORAGE VOLUME} 
+    ON { STORAGE VOLUME < name > [, < name >,...] ｜ ALL STORAGE VOLUMES} 
     TO { ROLE | USER} {<role_name>|<user_identity>} [ WITH GRANT OPTION ]
 ```
 
@@ -298,7 +309,7 @@ GRANT IMPERSONATE ON 'rose'@'%' TO 'jack'@'%';
 
 ### 指定 External Catalog 下的写权限
 
-当前仅支持写入数据到 Iceberg 表 (自 3.1 版本起)。
+当前仅支持写入数据到 Iceberg 表 (自 3.1 版本起) 和 Hive 表（自 3.2 版本起）。
 
    ```SQL
    -- 创建自定义角色。
